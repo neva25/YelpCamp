@@ -1,0 +1,9 @@
+<%- include('../partials/head') %>
+
+<h1>All Campgrounds</h1>
+<ul>
+    <% for (let campground of campgrounds) { %> 
+    <li><%= campground.title %> </li>
+    <% } %> 
+</ul>
+<%- include('../partials/footer') %>
