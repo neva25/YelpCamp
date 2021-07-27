@@ -3,7 +3,8 @@
 <h1><%= campground.title %></h1>
 <h2><%= campground.location %></h2>
 <footer>
-    <a href="/campgrounds">All Campground</a>
+    <a href="/campgrounds/<%= campground._id %>/edit">Edit Campground</a>
+    <a href="/campgrounds">All Campgrounds</a>
 </footer>
 
 <%- include('../partials/footer') %>
