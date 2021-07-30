@@ -3,9 +3,11 @@ const path = require("path");
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
+const Joi = require("joi");
 const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
 const Campground = require("./models/campground");
+const { validate } = require("./models/campground");
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
@@ -28,6 +30,25 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+
+const validateCampground = (req, res, next) => {
+  const campgroundSchema = Joi.object({
+    campground: Joi.object({
+      title: Joi.string().required(),
+      price: Joi.number().required().min(0),
+      image: Joi.string().required(),
+      location: Joi.string().required(),
+      description: Joi.string().required(),
+    }).required(),
+  });
+  const { error } = campgroundSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -55,6 +76,7 @@ app.get(
 
 app.post(
   "/campgrounds",
+  validateCampground,
   catchAsync(async (req, res) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
@@ -72,6 +94,7 @@ app.get(
 
 app.put(
   "/campgrounds/:id",
+  validateCampground,
   catchAsync(async (req, res) => {
     const campground = await Campground.findByIdAndUpdate(
       req.params.id,
