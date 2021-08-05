@@ -36,6 +36,10 @@
                 </div>
             </div>
             <div class="mb-3">
+                <label for="image" class="form-label">Add Images</label>
+                <input class="form-control" type="file" id="image" name="image" multiple>
+            </div>
+            <div class="mb-3">
                 <% campground.images.forEach((img, i) => { %>
                 <img src="<%= img.thumbnail %>" class="img-thumbnail" alt="">
                 <div class="form-check mb-2">
