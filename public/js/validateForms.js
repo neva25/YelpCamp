@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var forms = document.querySelectorAll(".validated-form");
+  const forms = document.querySelectorAll(".validated-form");
 
   Array.from(forms).forEach(function (form) {
     form.addEventListener(
